@@ -1,0 +1,45 @@
+version: '3.1'
+
+# RUN: $ docker-compose up
+
+services:
+
+  wordpress:
+    image: wordpress
+    restart: always
+    ports:
+     - 80:80
+    environment:
+      WORDPRESS_DB_HOST: mysqldb
+      WORDPRESS_DB_USER: ccd
+      WORDPRESS_DB_PASSWORD: cetip@123
+      WORDPRESS_DB_NAME: ccd
+    volumes:
+     - htdocs:/var/www/html
+    depends_on: 
+     - mysqldb
+    networks:
+     - wordpress-network 
+
+  mysqldb:
+    image: mysql:5.7
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: ccd
+      MYSQL_USER: ccd
+      MYSQL_PASSWORD: cetip@123
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    volumes:
+     - mysql_storage:/var/lib/mysql
+    networks:
+     - wordpress-network 
+
+volumes:
+    mysql_storage:
+    htdocs:
+
+networks:
+  wordpress-network:
+    driver: bridge
